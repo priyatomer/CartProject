@@ -3,18 +3,21 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StyleSheet, Text } from 'react-native';
 import { CardProvider } from './CardContext';
 import CartIcon from './src/components/CartIcon';
+import AppNav from './src/navigation/AppNav';
+import AppStack from './src/navigation/AuthStack';
 import Cart from './src/screens/Cart';
+import Login from './src/screens/Login';
 
-import ProductDetails from './src/screens/ProductDetails';
-import ProductListing from './src/screens/ProductListing';
+import Register from './src/screens/Register';
 
 const Stack = createNativeStackNavigator();
 
 function App () {
 	return (
 		<CardProvider>
-			<NavigationContainer>
-				<Stack.Navigator screenOptions={{ headerShown: false }}>
+			<AppNav />
+			{/* <Stack.Navigator screenOptions={{ headerShown: false }}>
+					
 					<Stack.Screen
 						name='Products'
 						component={ProductListing}
@@ -43,8 +46,7 @@ function App () {
 							headerRight: () => <CartIcon navigation={navigation} />
 						})}
 					/>
-				</Stack.Navigator>
-			</NavigationContainer>
+				</Stack.Navigator> */}
 		</CardProvider>
 	);
 }

@@ -3,14 +3,17 @@ import { Button, Image, SafeAreaView, ScrollView, StyleSheet, View, Text } from 
 import CardContext from '../../CardContext';
 import CartIcon from '../components/CartIcon';
 import { getProduct } from '../services/ProductServices';
+import { getProductById } from '../services/UserApis';
 
 const ProductDetails = ({ navigation,route }) => {
+	let url='http://192.168.1.36:3000/'
 	const { productId,lang } = route?.params;
     const [product,setProduct] = useState({});
 	const { addItemToCart ,getItemsCount, } = useContext(CardContext);
 	useEffect(() => {
-		setProduct(getProduct(productId));
-	});
+		// setProduct(getProduct(productId));
+		getProductDetails(productId)
+	},[]);
 
 	function onAddToCart () {
 		addItemToCart(product.id);
@@ -19,6 +22,13 @@ const ProductDetails = ({ navigation,route }) => {
         })
 	}
     
+	const getProductDetails = async(id) => {
+		getProductById(id).then((result)=>{
+			let data=result.data;
+			setProduct(data)
+		}).catch((err)=>{console.log(err)})
+		
+	};
 	return (
 		<SafeAreaView >
 			<ScrollView>
@@ -33,16 +43,16 @@ const ProductDetails = ({ navigation,route }) => {
 			    </View>
                 <View style={styles.maincontainer}>
                     <View style={styles.card}>
-				        <Image style={styles.image} source={product.image} resizeMode="contain" />
+				        <Image style={styles.image} source={{uri:`${url+product.image}`}} resizeMode="contain" />
 				            <View style={styles.infoContainer}>
-                                <Text style={styles.name}>{lang == 'English' ? product.name?.en : lang == 'French' ? product.name?.fr : product.name?.ch}</Text>
-					            <Text style={styles.price}>{lang == 'English' ? product.price?.en : lang == 'French' ? product.price?.fr : product.price?.ch}</Text>
-					            <Text style={styles.description}> {lang == 'English' ? (
-                                    product.descripton?.en
+                                <Text style={styles.name}>{lang == 'English' ? product?.name?.en : lang == 'French' ? product?.name?.fr : product?.name?.ch}</Text>
+					            <Text style={[styles.name,{fontSize:14}]}> {product.price}</Text>
+					            <Text style={[styles.name,{fontSize:16}]}> {lang == 'English' ? (
+                                    product.description?.en
                                     ) : lang == 'French' ? (
-                                        product.descripton?.fr
+                                        product.description?.fr
                                     ) : (
-                                        product.descripton?.ch
+                                        product.description?.ch
                                     )}
                                 </Text>
 	                            <Button onPress={onAddToCart} title='Add to Cart' style={{marginTop:10}}/>
@@ -96,16 +106,15 @@ const styles = StyleSheet.create({
 		width: '100%'
 	},
 	infoContainer: {
-		padding: 16
+		padding: 16,
+		
 	},
-	name: {
-		fontSize: 22,
-		fontWeight: 'bold'
-	},
+	
 	name: {
 		fontSize: 22,
 		fontWeight: '600',
-		marginBottom: 8
+		marginBottom: 8,
+		color:'black'
 	},
     quantity_view:{
         display:'flex',
